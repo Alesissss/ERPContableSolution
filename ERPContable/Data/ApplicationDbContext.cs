@@ -12,5 +12,18 @@ namespace ERPContable.Data
 
         // Propiedad DbSet por cada entidad/tabla
         public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<Area> Areas { get; set; }
+        public DbSet<PersonalArea> PersonalAreas { get; set; }
+        public DbSet<Personal> Personales { get; set; }
+        public DbSet<ReqInterno> ReqInternos { get; set; }
+        public DbSet<DReqInterno> DReqInternos { get; set; }
+        public DbSet<OCompra> OCompra { get; set; }
+        public DbSet<DCompra> DCompra { get; set; }
+        public DbSet<IngresoSalidaAlm> IngresoSalidaAlms { get; set; }
+        public DbSet<DIngresoSalidaAlm> DIngresoSalidaAlm { get; set; }
+        public DbSet<Proveedor> Proveedores { get; set; }
+        public DbSet<Producto> Productos { get; set; }
+        public DbSet<Umedida> Umedidas { get; set; }
+        public DbSet<Documento> Documentos { get; set; }
     }
 }
