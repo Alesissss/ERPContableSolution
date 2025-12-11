@@ -7,6 +7,9 @@ namespace ERPContable.Models
     {
         public int id { get; set; }
 
+        [Column("tipo_movimiento")]
+        public bool tipoMovimiento { get; set; }
+
         [Column("fecha_hora")]
         public DateTime fechaHora { get; set; }
 

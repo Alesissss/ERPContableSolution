@@ -10,7 +10,9 @@ namespace ERPContable.ViewModels.IngresoSalidaAlm
         [DataType(DataType.DateTime)]
         [Display(Name = "Fecha y Hora")]
         public DateTime FechaHora { get; set; }
-
+        [Required(ErrorMessage = "Debe especificar el tipo de movimiento")]
+        [Display(Name = "Tipo de movimiento")]
+        public bool TipoMovimiento { get; set; }
         [Display(Name = "Nota / Observaciones")]
         [StringLength(500, ErrorMessage = "La nota no debe exceder los 500 caracteres.")]
         public string? Nota { get; set; }

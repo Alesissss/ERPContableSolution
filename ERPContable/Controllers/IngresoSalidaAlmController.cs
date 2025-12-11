@@ -19,6 +19,18 @@ namespace ERPContable.Controllers
 
         // ------------------------- MÉTODOS AUXILIARES CORREGIDOS -------------------------
 
+        private void PopulateTipoMovimientoList()
+        {
+            var tipos = new List<SelectListItem>
+        {
+            // true (1) = Ingreso
+            new SelectListItem { Value = "True", Text = "Ingreso (Entrada a Almacén)" }, 
+            // false (0) = Salida
+            new SelectListItem { Value = "False", Text = "Salida (Salida de Almacén)" }
+        };
+            // Asignar a ViewBag.tipoMovimiento para que la vista lo use
+            ViewBag.tipoMovimiento = tipos;
+        }
         private async Task PopulateDropDowns(IngresoSalidaAlmViewModel vm = null)
         {
             // Requerimientos Internos
@@ -83,6 +95,7 @@ namespace ERPContable.Controllers
             var vm = new IngresoSalidaAlmViewModel
             {
                 Id = ingresoSalida.id,
+                TipoMovimiento = ingresoSalida.tipoMovimiento,
                 FechaHora = ingresoSalida.fechaHora,
                 Nota = ingresoSalida.nota,
                 ReqInternoId = ingresoSalida.reqinternoId,
@@ -125,6 +138,7 @@ namespace ERPContable.Controllers
                 select new IngresoSalidaAlmViewModel
                 {
                     Id = isa.id,
+                    TipoMovimiento = isa.tipoMovimiento,
                     FechaHora = isa.fechaHora,
                     ReqInternoNombre = $"Req. N° {r.id}",
                     DocumentoNombre = d.nombre,
@@ -152,6 +166,7 @@ namespace ERPContable.Controllers
         public async Task<IActionResult> Create()
         {
             await PopulateDropDowns();
+            PopulateTipoMovimientoList();
 
             var estadoInicial = await _context.Estados.FirstOrDefaultAsync(e => e.tabla == "INGRESOSALIDAALM" && e.nombre.ToLower() == "pendiente");
             // 🛑 CORRECCIÓN: Buscar un documento por código, si 'tabla' no existe 🛑
@@ -160,6 +175,7 @@ namespace ERPContable.Controllers
             var vm = new IngresoSalidaAlmViewModel
             {
                 FechaHora = DateTime.Now,
+                TipoMovimiento = true, // Por defecto Ingreso
                 EstadoId = estadoInicial?.id ?? 1,
                 DocumentoId = documentoDefecto?.id ?? 1,
                 Detalles = new List<DIngresoSalidaAlmViewModel>()
@@ -171,7 +187,7 @@ namespace ERPContable.Controllers
         // POST: IngresoSalidaAlm/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FechaHora,Nota,ReqInternoId,DocumentoId,EstadoId,OCompraId,Detalles")] IngresoSalidaAlmViewModel vm)
+        public async Task<IActionResult> Create([Bind("FechaHora,TipoMovimiento,Nota,ReqInternoId,DocumentoId,EstadoId,OCompraId,Detalles")] IngresoSalidaAlmViewModel vm)
         {
             if (vm.Detalles == null || !vm.Detalles.Any())
             {
@@ -185,6 +201,7 @@ namespace ERPContable.Controllers
                     // ... (Retorno de errores JSON)
                 }
                 await PopulateDropDowns(vm);
+                PopulateTipoMovimientoList();
                 return View(vm);
             }
 
@@ -195,6 +212,7 @@ namespace ERPContable.Controllers
                     var ingresoSalida = new IngresoSalidaAlm
                     {
                         fechaHora = vm.FechaHora,
+                        tipoMovimiento = vm.TipoMovimiento,
                         nota = vm.Nota,
                         reqinternoId = vm.ReqInternoId.Value,
                         documentoId = vm.DocumentoId,
@@ -233,6 +251,7 @@ namespace ERPContable.Controllers
                     }
 
                     ModelState.AddModelError("", "Ocurrió un error al guardar los datos.");
+                    PopulateTipoMovimientoList();
                     await PopulateDropDowns(vm);
                     return View(vm);
                 }
@@ -247,6 +266,7 @@ namespace ERPContable.Controllers
             if (id == null) return NotFound();
             var vm = await GetIngresoSalidaViewModelForDisplay(id.Value);
             if (vm == null) return NotFound();
+            PopulateTipoMovimientoList();
             await PopulateDropDowns(vm);
             return View(vm);
         }
@@ -254,7 +274,7 @@ namespace ERPContable.Controllers
         // POST: IngresoSalidaAlm/Edit/5 (La lógica de transacciones y AJAX se mantiene)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FechaHora,Nota,ReqInternoId,DocumentoId,EstadoId,OCompraId,Detalles")] IngresoSalidaAlmViewModel vm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FechaHora,TipoMovimiento,Nota,ReqInternoId,DocumentoId,EstadoId,OCompraId,Detalles")] IngresoSalidaAlmViewModel vm)
         {
             if (id != vm.Id) return NotFound();
             if (vm.Detalles == null || !vm.Detalles.Any())
@@ -269,6 +289,7 @@ namespace ERPContable.Controllers
                     // ... (Retorno de errores JSON)
                 }
                 await PopulateDropDowns(vm);
+                PopulateTipoMovimientoList();
                 return View(vm);
             }
 
@@ -287,6 +308,7 @@ namespace ERPContable.Controllers
 
                             // Actualizar Cabecera
                             ingresoSalidaToUpdate.fechaHora = vm.FechaHora;
+                            ingresoSalidaToUpdate.tipoMovimiento = vm.TipoMovimiento;
                             ingresoSalidaToUpdate.nota = vm.Nota;
                             ingresoSalidaToUpdate.reqinternoId = vm.ReqInternoId.Value;
                             ingresoSalidaToUpdate.documentoId = vm.DocumentoId;

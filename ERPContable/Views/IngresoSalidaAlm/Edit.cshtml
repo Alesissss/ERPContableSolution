@@ -252,7 +252,7 @@
             <span>ℹ️</span> Información del Movimiento
         </h4>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
                     @* Se asegura que el formato sea compatible con input type="datetime-local" *@
@@ -262,6 +262,16 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
+                    <label asp-for="TipoMovimiento" class="form-label">Tipo de Movimiento</label>
+                    <select asp-for="TipoMovimiento" class="form-control form-select" asp-items="ViewBag.tipoMovimiento">
+                        <option value="">-- Seleccione tipo de movimiento --</option>
+                    </select>
+
+                    <span asp-validation-for="TipoMovimiento" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group mb-3">
                     <label asp-for="DocumentoId" class="form-label">Tipo de Documento</label>
                     <select asp-for="DocumentoId" class="form-control form-select" asp-items="ViewBag.DocumentoId">
                         <option value="">-- Seleccione Documento --</option>
@@ -269,7 +279,7 @@
                     <span asp-validation-for="DocumentoId" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label asp-for="ReqInternoId" class="form-label">Requerimiento Interno (Origen)</label>
                     <select asp-for="ReqInternoId" class="form-control form-select" asp-items="ViewBag.ReqInternoId">
@@ -454,7 +464,6 @@
             var newRow = `
                 <tr>
                     <td>
-                        {{! Campos ocultos para el Binding del modelo (Detalles[i].Propiedad) }}
                         <input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${cantidad}" />

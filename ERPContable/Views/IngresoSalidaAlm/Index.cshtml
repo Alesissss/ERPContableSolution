@@ -206,6 +206,9 @@
                 <tr>
                     <th>ID</th>
                     <th>
+                        Tipo Movimiento
+                    </th>
+                    <th>
                         Fecha y Hora
                     </th>
                     <th>
@@ -231,6 +234,9 @@
                         <tr>
                             <td>
                                 <span class="id-badge">#@Html.DisplayFor(modelItem => item.Id)</span>
+                            </td>
+                            <td>
+                                <strong>@(item.TipoMovimiento ? "Ingreso" : "Salida")</strong>
                             </td>
                             <td>
                                 @item.FechaHora.ToString("dd/MM/yyyy HH:mm")
