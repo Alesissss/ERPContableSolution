@@ -1,5 +1,8 @@
-﻿namespace ERPContable.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ERPContable.Models
 {
+    [Table("UMEDIDA")]
     public class Umedida
     {
         public int id { get; set; }

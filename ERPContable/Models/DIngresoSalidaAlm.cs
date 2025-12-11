@@ -1,5 +1,8 @@
-﻿namespace ERPContable.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ERPContable.Models
 {
+    [Table("DINGRESOSALIDAALM")]
     public class DIngresoSalidaAlm
     {
         public int ingresoSalidaAlmId { get; set; }

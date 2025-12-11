@@ -1,5 +1,8 @@
-﻿namespace ERPContable.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ERPContable.Models
 {
+    [Table("ESTADO")]
     public class Estado
     {
         public int id { get; set; }

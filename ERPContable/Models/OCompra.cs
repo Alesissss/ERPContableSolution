@@ -2,6 +2,7 @@
 
 namespace ERPContable.Models
 {
+    [Table("OCOMPRA")]
     public class OCompra
     {
         public int id { get; set; }

@@ -2,7 +2,7 @@
 
 namespace ERPContable.Models
 {
-    [Table("personal_area")]
+    [Table("PERSONAL_AREA")]
     public class PersonalArea
     {
         [Column("personal_id")]

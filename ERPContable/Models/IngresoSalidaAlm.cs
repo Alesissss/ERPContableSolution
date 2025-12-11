@@ -2,6 +2,7 @@
 
 namespace ERPContable.Models
 {
+    [Table("INGRESOSALIDAALM")]
     public class IngresoSalidaAlm
     {
         public int id { get; set; }
@@ -15,6 +16,6 @@ namespace ERPContable.Models
         [Column("estado_id")]
         public int estadoId { get; set; }
         [Column("ocompra_id")]
-        public int ocompraId { get; set; }
+        public int? ocompraId { get; set; }
     }
 }

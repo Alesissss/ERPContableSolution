@@ -1,5 +1,8 @@
-﻿namespace ERPContable.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ERPContable.Models
 {
+    [Table("PROVEEDOR")]
     public class Proveedor
     {
         public int id { get; set; }

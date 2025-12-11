@@ -1,0 +1,115 @@
+﻿@model ERPContable.ViewModels.ReqInterno.ReqInternoViewModel
+
+@{
+    ViewData["Title"] = "Editar Requerimiento Interno N° " + Model.Id;
+}
+
+<div class="card p-3">
+    <h4>Detalle de Productos Solicitados</h4>
+    <table class="table" id="detallesTable">
+        <thead>
+        </thead>
+        <tbody>
+
+            @{
+                // DECLARACIÓN E INICIALIZACIÓN: Hacemos que la variable sea global dentro de este bloque Razor
+                int index = 0;
+            }
+            @if (Model.Detalles != null)
+            {
+                @foreach (var detalle in Model.Detalles)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" name="Detalles.Index" value="@index" />
+
+                            <input type="hidden" name="Detalles[@index].ProductoId" value="@detalle.ProductoId" />
+                            <input type="hidden" name="Detalles[@index].Cantidad" value="@detalle.Cantidad" />
+                            <input type="hidden" name="Detalles[@index].Observacion" value="@detalle.Observacion" />
+
+                            @detalle.ProductoNombre
+                        </td>
+                        <td>@detalle.Cantidad</td>
+                        <td>@detalle.Observacion</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm removeDetalleBtn">Eliminar</button>
+                        </td>
+                    </tr>
+                    index++; // Incremento dentro del loop
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // AHORA @index EXISTE EN ESTE CONTEXTO, conteniendo el total de filas renderizadas.
+        var detalleIndex = @index;
+
+        // ... (resto del código JavaScript) ...
+
+        // Función para agregar una fila de detalle (idéntica a la de Create.cshtml)
+        $('#agregarDetalleBtn').click(function () {
+            var productoSelect = $('#productoSelect');
+            var productoId = productoSelect.val();
+            var productoNombre = productoSelect.find('option:selected').text();
+            var cantidad = $('#cantidadInput').val();
+            var observacion = $('#observacionInput').val();
+
+            if (!productoId || cantidad <= 0) {
+                alert('Debe seleccionar un producto y especificar una cantidad mayor a cero.');
+                return;
+            }
+
+            // Comprobación si el producto ya existe
+            var exists = false;
+            $('#detallesTable tbody tr').each(function() {
+                if ($(this).find('[name$="ProductoId"]').val() === productoId) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if(exists) {
+                alert('Este producto ya fue agregado al requerimiento.');
+                return;
+            }
+
+            // Generar la nueva fila y los campos ocultos para el binding de MVC
+            var newRow = `
+                <tr>
+                    <td><input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${cantidad}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Observacion" value="${observacion}" />
+                        ${productoNombre}
+                    </td>
+                    <td>${cantidad}</td>
+                    <td>${observacion}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm removeDetalleBtn">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+
+            $('#detallesTable tbody').append(newRow);
+            detalleIndex++;
+
+            // Limpiar campos de entrada
+            productoSelect.val('');
+            $('#cantidadInput').val('');
+            $('#observacionInput').val('');
+        });
+
+        // Función para eliminar una fila de detalle
+        $(document).on('click', '.removeDetalleBtn', function () {
+            $(this).closest('tr').remove();
+        });
+    </script>
+}

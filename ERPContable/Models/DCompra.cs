@@ -2,6 +2,7 @@
 
 namespace ERPContable.Models
 {
+    [Table("DCOMPRA")]
     public class DCompra
     {
         [Column("producto_id")]

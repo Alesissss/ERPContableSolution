@@ -25,5 +25,20 @@ namespace ERPContable.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Umedida> Umedidas { get; set; }
         public DbSet<Documento> Documentos { get; set; }
+        public DbSet<Estado> Estados { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DCompra>()
+                .HasKey(dc => new { dc.ocompraId, dc.productoId });
+            modelBuilder.Entity<DIngresoSalidaAlm>()
+                .HasKey(dc => new { dc.ingresoSalidaAlmId, dc.productoId });
+            modelBuilder.Entity<DReqInterno>()
+                .HasKey(dc => new { dc.reqinternoId, dc.productoId });
+            modelBuilder.Entity<PersonalArea>()
+                .HasKey(dc => new { dc.personalId, dc.areaId });
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

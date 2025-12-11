@@ -2,6 +2,7 @@
 
 namespace ERPContable.Models
 {
+    [Table("AREA")]
     public class Area
     {
         public int id { get; set; }

@@ -2,6 +2,7 @@
 
 namespace ERPContable.Models
 {
+    [Table("REQINTERNO")]
     public class ReqInterno
     {
         public int id { get; set; }
@@ -15,6 +16,8 @@ namespace ERPContable.Models
         [Column("documento_id")]
         public int documentoId { get; set; }
         [Column("estado_id")]
-        public string estadoId { get; set; }
+        public int estadoId { get; set; }
+        // ***** PROPIEDAD DE NAVEGACIÓN A DETALLE (IMPRESCINDIBLE PARA DETAILS/DELETE EFICIENTE) *****
+        public ICollection<DReqInterno> DReqInterno { get; set; } = new List<DReqInterno>();
     }
 }

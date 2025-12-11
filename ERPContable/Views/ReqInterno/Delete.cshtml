@@ -1,0 +1,24 @@
+﻿@model ERPContable.ViewModels.ReqInterno.ReqInternoViewModel
+
+@{
+    ViewData["Title"] = "Eliminar Requerimiento N° " + Model.Id;
+}
+
+<h1>Eliminar</h1>
+
+<h3>¿Estás seguro de que quieres eliminar este requerimiento interno N° @Model.Id?</h3>
+<div class="alert alert-warning">
+    <strong>Advertencia:</strong> Esto eliminará permanentemente el requerimiento y todos sus detalles.
+</div>
+
+@* Reutilizamos el detalle del requerimiento para mostrar la información antes de eliminar *@
+<partial name="_ReqInternoDetailsPartial" model="Model" />
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Eliminar Requerimiento" class="btn btn-danger" /> |
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@* Nota: Podrías crear una vista parcial llamada "_ReqInternoDetailsPartial.cshtml" que contenga 
+    el código de la vista Details (sin los botones de acción) para evitar duplicar el HTML de visualización. *@

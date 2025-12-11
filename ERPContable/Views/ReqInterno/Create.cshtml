@@ -1,0 +1,159 @@
+﻿@model ERPContable.ViewModels.ReqInterno.ReqInternoViewModel
+
+@{
+    ViewData["Title"] = "Crear Requerimiento Interno";
+}
+
+<h1>Crear Requerimiento Interno</h1>
+
+<form asp-action="Create" id="reqInternoForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="card p-3 mb-3">
+        <h4>Información General</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="FechaHora" class="control-label"></label>
+                    <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="FechaHora" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="PersonalId" class="control-label">Personal Solicitante</label>
+                    <select asp-for="PersonalId" class="form-control" asp-items="ViewBag.PersonalId"></select>
+                    <span asp-validation-for="PersonalId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="AreaId" class="control-label">Área</label>
+                    <select asp-for="AreaId" class="form-control" asp-items="ViewBag.AreaId"></select>
+                    <span asp-validation-for="AreaId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Nota" class="control-label"></label>
+            <textarea asp-for="Nota" class="form-control"></textarea>
+            <span asp-validation-for="Nota" class="text-danger"></span>
+        </div>
+        @* Campos de Documento y Estado se pueden mantener ocultos o pre-seleccionados *@
+        <input type="hidden" asp-for="DocumentoId" value="1" />
+        <input type="hidden" asp-for="EstadoId" />
+    </div>
+
+    <div class="card p-3">
+        <h4>Detalle de Productos Solicitados</h4>
+        <table class="table" id="detallesTable">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* Las filas se insertarán aquí dinámicamente con JavaScript *@
+            </tbody>
+        </table>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <select id="productoSelect" class="form-control" asp-items="ViewBag.ProductoId">
+                    <option value="">-- Seleccione Producto --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="number" id="cantidadInput" min="0.01" step="0.01" class="form-control" placeholder="Cantidad" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="observacionInput" class="form-control" placeholder="Observación" />
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-success w-100" id="agregarDetalleBtn">Agregar</button>
+            </div>
+        </div>
+        <span asp-validation-for="Detalles" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Crear Requerimiento" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        var detalleIndex = 0;
+
+        // Función para agregar una fila de detalle
+        $('#agregarDetalleBtn').click(function () {
+            var productoId = $('#productoSelect').val();
+            var productoNombre = $('#productoSelect option:selected').text();
+            var cantidad = $('#cantidadInput').val();
+            var observacion = $('#observacionInput').val();
+
+            if (!productoId || cantidad <= 0) {
+                alert('Debe seleccionar un producto y especificar una cantidad mayor a cero.');
+                return;
+            }
+
+            // Si el producto ya existe en la tabla, se podría preguntar si desea sumar la cantidad
+            var exists = false;
+            $('#detallesTable tbody tr').each(function() {
+                if ($(this).find('[name$="ProductoId"]').val() === productoId) {
+                    exists = true;
+                    return false; // Salir del each
+                }
+            });
+
+            if(exists) {
+                alert('Este producto ya fue agregado al requerimiento.');
+                return;
+            }
+
+            // Generar la nueva fila y los campos ocultos para el binding de MVC
+            var newRow = `
+                <tr>
+                    <td><input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${cantidad}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Observacion" value="${observacion}" />
+                        ${productoNombre}
+                    </td>
+                    <td>${cantidad}</td>
+                    <td>${observacion}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm removeDetalleBtn">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+
+            $('#detallesTable tbody').append(newRow);
+            detalleIndex++;
+
+            // Limpiar campos de entrada
+            $('#productoSelect').val('');
+            $('#cantidadInput').val('');
+            $('#observacionInput').val('');
+        });
+
+        // Función para eliminar una fila de detalle
+        $(document).on('click', '.removeDetalleBtn', function () {
+            $(this).closest('tr').remove();
+
+            // No es necesario reindexar los Hidden Indexers si usas el enfoque de "Hidden Indexers"
+            // donde solo se necesita la clave "Detalles.Index" con un valor único para cada fila.
+        });
+
+        // Si estás editando, debes cargar el 'detalleIndex' con el número de filas existentes + 1
+        // y generar las filas de detalle al cargar la vista.
+    </script>
+}
