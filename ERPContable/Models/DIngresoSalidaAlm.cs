@@ -8,6 +8,6 @@ namespace ERPContable.Models
         public int ingresoSalidaAlmId { get; set; }
         public int productoId { get; set; }
         public decimal cantidad { get; set; }
-        public string observacion { get; set; }
+        public string? observacion { get; set; }
     }
 }

@@ -5,7 +5,7 @@
         // Propiedades del Encabezado (Maestro)
         public int Id { get; set; }
         public DateTime FechaHora { get; set; } = DateTime.Now;
-        public string Nota { get; set; }
+        public string? Nota { get; set; }
 
         // IDs de las Entidades Relacionadas (Usados para DropDownLists)
         public int PersonalId { get; set; }
@@ -19,9 +19,9 @@
         public List<DReqInternoViewModel> Detalles { get; set; } = new List<DReqInternoViewModel>();
 
         // Propiedades adicionales para mostrar en la vista
-        public string PersonalNombreCompleto { get; set; }
-        public string AreaNombre { get; set; }
-        public string DocumentoCodigo { get; set; }
-        public string EstadoNombre { get; set; }
+        public string? PersonalNombreCompleto { get; set; }
+        public string? AreaNombre { get; set; }
+        public string? DocumentoCodigo { get; set; }
+        public string? EstadoNombre { get; set; }
     }
 }

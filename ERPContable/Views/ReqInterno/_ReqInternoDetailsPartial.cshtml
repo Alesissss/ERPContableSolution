@@ -1,0 +1,59 @@
+﻿@model ERPContable.ViewModels.ReqInterno.ReqInternoViewModel
+
+<h1>Detalles de Requerimiento N° @Model.Id</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Encabezado del Requerimiento</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Fecha y Hora</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaHora)</dd>
+
+            <dt class="col-sm-3">Solicitante</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.PersonalNombreCompleto)</dd>
+
+            <dt class="col-sm-3">Área</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.AreaNombre)</dd>
+
+            <dt class="col-sm-3">Documento</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.DocumentoCodigo)</dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                <span class="badge bg-secondary">@Html.DisplayFor(model => model.EstadoNombre)</span>
+            </dd>
+
+            <dt class="col-sm-3">Nota</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Nota)</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Productos Solicitados</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detalle in Model.Detalles)
+                {
+                    <tr>
+                        <td>@detalle.ProductoNombre</td>
+                        <td>@detalle.Cantidad</td>
+                        <td>@detalle.Observacion</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

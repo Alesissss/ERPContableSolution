@@ -8,7 +8,7 @@ namespace ERPContable.Models
         public int id { get; set; }
         [Column("fecha_hora")]
         public DateTime fechaHora { get; set; }
-        public string nota { get; set; }
+        public string? nota { get; set; }
         [Column("reqinterno_id")]
         public int reqinternoId { get; set; }
         [Column("documento_id")]

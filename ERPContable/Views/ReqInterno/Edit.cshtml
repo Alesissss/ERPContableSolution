@@ -2,98 +2,451 @@
 
 @{
     ViewData["Title"] = "Editar Requerimiento Interno N° " + Model.Id;
+    int index = 0;
 }
 
-<div class="card p-3">
-    <h4>Detalle de Productos Solicitados</h4>
-    <table class="table" id="detallesTable">
-        <thead>
-        </thead>
-        <tbody>
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-            @{
-                // DECLARACIÓN E INICIALIZACIÓN: Hacemos que la variable sea global dentro de este bloque Razor
-                int index = 0;
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+    .req-id-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.125rem;
+        display: inline-block;
+        backdrop-filter: blur(10px);
+    }
+
+    .modern-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: none;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 0.625rem 0.875rem;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+    .modern-table {
+        margin-bottom: 0;
+    }
+
+        .modern-table thead {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+            .modern-table thead th {
+                font-weight: 600;
+                color: #495057;
+                border: none;
+                padding: 1rem;
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
-            @if (Model.Detalles != null)
-            {
-                @foreach (var detalle in Model.Detalles)
-                {
-                    <tr>
-                        <td>
-                            <input type="hidden" name="Detalles.Index" value="@index" />
 
-                            <input type="hidden" name="Detalles[@index].ProductoId" value="@detalle.ProductoId" />
-                            <input type="hidden" name="Detalles[@index].Cantidad" value="@detalle.Cantidad" />
-                            <input type="hidden" name="Detalles[@index].Observacion" value="@detalle.Observacion" />
+        .modern-table tbody tr {
+            border-bottom: 1px solid #f1f3f5;
+            transition: all 0.2s ease;
+        }
 
-                            @detalle.ProductoNombre
-                        </td>
-                        <td>@detalle.Cantidad</td>
-                        <td>@detalle.Observacion</td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm removeDetalleBtn">Eliminar</button>
-                        </td>
-                    </tr>
-                    index++; // Incremento dentro del loop
-                }
+            .modern-table tbody tr:hover {
+                background-color: #f8f9fa;
             }
-        </tbody>
-    </table>
 
+        .modern-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+    .add-product-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        border: none;
+        color: white;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+
+    .btn-remove {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        .btn-remove:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+            color: white;
+        }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-custom {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .empty-table-message {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .quantity-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .product-name {
+        font-weight: 500;
+        color: #495057;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 1.5rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-primary-custom,
+        .btn-secondary-custom {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>
+        <span>✏️</span>
+        Editar Requerimiento Interno
+        <span class="req-id-badge">#@Model.Id</span>
+    </h1>
 </div>
 
+<form asp-action="Edit" id="reqInternoFormWrapper">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="modern-card">
+        <h4 class="card-title">
+            <span>ℹ️</span> Información General
+        </h4>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
+                    <input asp-for="FechaHora" type="datetime-local" class="form-control" value="@(Model.FechaHora.ToString("yyyy-MM-ddTHH:mm"))" />
+                    <span asp-validation-for="FechaHora" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="PersonalId" class="form-label">Personal Solicitante</label>
+                    <select asp-for="PersonalId" class="form-control form-select" asp-items="ViewBag.PersonalId">
+                        <option value="">-- Seleccione Personal --</option>
+                    </select>
+                    <span asp-validation-for="PersonalId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="AreaId" class="form-label">Área</label>
+                    <select asp-for="AreaId" class="form-control form-select" asp-items="ViewBag.AreaId">
+                        <option value="">-- Seleccione Área --</option>
+                    </select>
+                    <span asp-validation-for="AreaId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-0">
+            <label asp-for="Nota" class="form-label">Nota / Observaciones</label>
+            <textarea asp-for="Nota" class="form-control" rows="3" placeholder="Ingrese observaciones adicionales..."></textarea>
+            <span asp-validation-for="Nota" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="DocumentoId" />
+        <input type="hidden" asp-for="EstadoId" />
+    </div>
+
+    <div class="modern-card">
+        <h4 class="card-title">
+            <span>📦</span> Detalle de Productos Solicitados
+        </h4>
+
+        <div class="table-responsive">
+            <table class="table modern-table" id="detallesTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width: 120px;">Cantidad</th>
+                        <th>Observación</th>
+                        <th style="width: 120px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        index = 0;
+                    }
+                    @if (Model.Detalles != null && Model.Detalles.Any())
+                    {
+                        @foreach (var detalle in Model.Detalles)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="Detalles.Index" value="@index" />
+                                    <input type="hidden" name="Detalles[@index].ProductoId" value="@detalle.ProductoId" />
+                                    <input type="hidden" name="Detalles[@index].Cantidad" value="@detalle.Cantidad" />
+                                    <input type="hidden" name="Detalles[@index].Observacion" value="@detalle.Observacion" />
+                                    <span class="product-name">@detalle.ProductoNombre</span>
+                                </td>
+                                <td>
+                                    <span class="quantity-badge">@detalle.Cantidad</span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(detalle.Observacion))
+                                    {
+                                        @detalle.Observacion
+                                    }
+                                    else
+                                    {
+                                        <em style="color: #999;">Sin observación</em>
+                                    }
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-remove removeDetalleBtn">
+                                        🗑️ Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr id="emptyMessage">
+                            <td colspan="4" class="empty-table-message">
+                                No hay productos agregados. Use el formulario a continuación para agregar productos.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="add-product-section">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Producto</label>
+                    <select id="productoSelect" class="form-control form-select" asp-items="ViewBag.ProductoId">
+                        <option value="">-- Seleccione Producto --</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" id="cantidadInput" min="0.01" step="0.01" class="form-control" placeholder="0.00" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Observación</label>
+                    <input type="text" id="observacionInput" class="form-control" placeholder="Opcional..." />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label d-none d-md-block">&nbsp;</label>
+                    <button type="button" class="btn btn-add" id="agregarDetalleBtn">
+                        ➕ Agregar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <span asp-validation-for="Detalles" class="text-danger"></span>
+    </div>
+
+    <div class="action-buttons">
+        <button type="button" id="submitBtn" class="btn btn-primary-custom">
+            💾 Guardar Cambios
+        </button>
+        <a asp-action="Index" class="btn btn-secondary-custom">
+            ❌ Cancelar
+        </a>
+    </div>
+</form>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-        // AHORA @index EXISTE EN ESTE CONTEXTO, conteniendo el total de filas renderizadas.
+        // Inicializar el índice con el número de filas existentes
         var detalleIndex = @index;
 
-        // ... (resto del código JavaScript) ...
+        // --- FUNCIONES DE DETALLES ---
 
-        // Función para agregar una fila de detalle (idéntica a la de Create.cshtml)
+        // Función para agregar una fila de detalle
         $('#agregarDetalleBtn').click(function () {
             var productoSelect = $('#productoSelect');
             var productoId = productoSelect.val();
+            // Esto captura el texto del producto seleccionado en el dropdown
             var productoNombre = productoSelect.find('option:selected').text();
             var cantidad = $('#cantidadInput').val();
             var observacion = $('#observacionInput').val();
 
             if (!productoId || cantidad <= 0) {
-                alert('Debe seleccionar un producto y especificar una cantidad mayor a cero.');
+                alert('⚠️ Debe seleccionar un producto y especificar una cantidad mayor a cero.');
                 return;
             }
 
             // Comprobación si el producto ya existe
             var exists = false;
             $('#detallesTable tbody tr').each(function() {
-                if ($(this).find('[name$="ProductoId"]').val() === productoId) {
+                // Buscamos el input hidden del ProductoId
+                if ($(this).find(`input[name$="ProductoId"]`).val() === productoId) {
                     exists = true;
                     return false;
                 }
             });
 
             if(exists) {
-                alert('Este producto ya fue agregado al requerimiento.');
+                alert('⚠️ Este producto ya fue agregado al requerimiento.');
                 return;
             }
+
+            // Ocultar mensaje de tabla vacía si existe
+            $('#emptyMessage').remove();
 
             // Generar la nueva fila y los campos ocultos para el binding de MVC
             var newRow = `
                 <tr>
-                    <td><input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
+                    <td>
+                        <input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${cantidad}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].Observacion" value="${observacion}" />
-                        ${productoNombre}
+                        <span class="product-name">${productoNombre}</span>
                     </td>
-                    <td>${cantidad}</td>
-                    <td>${observacion}</td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-sm removeDetalleBtn">Eliminar</button>
+                        <span class="quantity-badge">${cantidad}</span>
+                    </td>
+                    <td>${observacion || '<em style="color: #999;">Sin observación</em>'}</td>
+                    <td>
+                        <button type="button" class="btn btn-remove removeDetalleBtn">
+                            🗑️ Eliminar
+                        </button>
                     </td>
                 </tr>
             `;
@@ -105,11 +458,159 @@
             productoSelect.val('');
             $('#cantidadInput').val('');
             $('#observacionInput').val('');
+
+            // Focus en el select de productos
+            productoSelect.focus();
         });
 
         // Función para eliminar una fila de detalle
         $(document).on('click', '.removeDetalleBtn', function () {
             $(this).closest('tr').remove();
+
+            // Reindexar los elementos después de una eliminación (CRUCIAL para Model Binding)
+            reindexDetalles();
+
+            // Mostrar mensaje de tabla vacía si no hay filas (excepto el mensaje)
+            if ($('#detallesTable tbody tr').not('#emptyMessage').length === 0) {
+                $('#detallesTable tbody').append(`
+                    <tr id="emptyMessage">
+                        <td colspan="4" class="empty-table-message">
+                            No hay productos agregados. Use el formulario a continuación para agregar productos.
+                        </td>
+                    </tr>
+                `);
+            }
+        });
+
+        // Función para reindexar todos los detalles después de añadir o eliminar
+        function reindexDetalles() {
+            var newIndex = 0;
+            $('#detallesTable tbody tr').not('#emptyMessage').each(function() {
+                // Actualizar el input Detalles.Index
+                $(this).find('input[name="Detalles.Index"]').val(newIndex);
+
+                // Actualizar los inputs indexados
+                $(this).find('input[name^="Detalles["]').each(function() {
+                    var oldName = $(this).attr('name');
+                    var newName = oldName.replace(/Detalles\[\d+\]/g, `Detalles[${newIndex}]`);
+                    $(this).attr('name', newName);
+                });
+
+                newIndex++;
+            });
+            detalleIndex = newIndex; // Aseguramos que el siguiente detalle use el índice correcto
+        }
+
+        // Permitir agregar con Enter en los campos de detalle
+        $('#cantidadInput, #observacionInput').keypress(function(e) {
+            if(e.which === 13) {
+                e.preventDefault();
+                $('#agregarDetalleBtn').click();
+            }
+        });
+
+        // --- LÓGICA AJAX Y VALIDACIÓN ---
+
+        // Función para limpiar los errores de validación
+        function clearValidationErrors() {
+            // Limpiar los spans de error
+            $('.text-danger').empty();
+
+            // Quitar el estilo de error de los controles
+            $('.form-control').removeClass('input-validation-error');
+            $('.form-select').removeClass('input-validation-error');
+
+            // Limpiar los mensajes de resumen (si los hubiera)
+            $('[asp-validation-summary="ModelOnly"]').empty().hide();
+        }
+
+        $('#submitBtn').click(function (e) {
+            e.preventDefault();
+            clearValidationErrors();
+
+            // Reindexar justo antes de serializar (para asegurar que los índices son correctos 0, 1, 2...)
+            reindexDetalles();
+
+            var form = $('#reqInternoFormWrapper');
+            // Serializa todos los inputs dentro del div del formulario (excluyendo el botón)
+            var formData = form.find(':input').not('button').serializeArray();
+
+            // Incluir el token de validación (Anti-Forgery Token)
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            formData.push({ name: '__RequestVerificationToken', value: token });
+
+            var button = $(this);
+
+            $.ajax({
+                url: '@Url.Action("Edit", "ReqInterno", new { id = Model.Id })',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function() {
+                    button.prop('disabled', true).text('Guardando...');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('✅ Requerimiento interno actualizado con éxito.');
+                        // Redirige a Index
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        // El ModelState falló en el servidor
+                        button.prop('disabled', false).text('💾 Guardar Cambios');
+
+                        if (response.errors) {
+                            var modelOnlyErrors = [];
+
+                            for (var key in response.errors) {
+                                if (response.errors.hasOwnProperty(key)) {
+                                    var errorMessages = response.errors[key];
+                                    var errorMessageText = errorMessages.join(', ');
+
+                                    // 1. Intentar mostrar el error junto al campo
+                                    // Buscar por el atributo data-valmsg-for o el name
+                                    var errorSpan = $(`[data-valmsg-for="${key}"], [name="${key}"]`).next('.text-danger');
+
+                                    if(errorSpan.length === 0) {
+                                        // Buscar por el span de validación explícito (si está fuera del input)
+                                        errorSpan = $(`span[asp-validation-for="${key}"]`);
+                                    }
+
+                                    if (errorSpan.length > 0) {
+                                        // Error de campo específico (e.g., PersonalId, FechaHora)
+                                        errorSpan.text(errorMessageText).show();
+                                        // Resaltar el campo (ej: PersonalId, AreaId)
+                                        $(`[name="${key}"]`).addClass('input-validation-error');
+                                    } else {
+                                        // 2. Si no se encuentra un span de campo, es un error a nivel de modelo (ej: Detalles lista vacía)
+                                        modelOnlyErrors.push(`${key}: ${errorMessageText}`);
+                                        // Si es error de detalles, marcamos el span global de detalles
+                                        if (key === 'Detalles') {
+                                            $('[asp-validation-for="Detalles"]').text(errorMessageText).show();
+                                        }
+                                    }
+                                }
+                            }
+
+                            // 3. Mostrar errores que solo son a nivel de modelo
+                            if (modelOnlyErrors.length > 0) {
+                                var summary = $('[asp-validation-summary="ModelOnly"]');
+                                summary.empty().show();
+                                summary.append('<ul>' + modelOnlyErrors.map(e => `<li>${e}</li>`).join('') + '</ul>');
+                            }
+
+                            alert('⚠️ Por favor, revise los campos con errores. Hay fallos de validación.');
+                        } else if (response.message) {
+                             // Error genérico del catch (ej: error en la BD)
+                             alert('❌ Error interno del servidor: ' + response.message);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    button.prop('disabled', false).text('💾 Guardar Cambios');
+                    alert('❌ Error de conexión o servidor (' + xhr.status + '). Revise la consola para más detalles.');
+                    console.error("AJAX Error:", status, error, xhr.responseText);
+                }
+            });
         });
     </script>
 }

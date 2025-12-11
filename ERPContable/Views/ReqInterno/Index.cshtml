@@ -1,59 +1,261 @@
 ﻿@model IEnumerable<ERPContable.ViewModels.ReqInterno.ReqInternoViewModel>
-
 @{
     ViewData["Title"] = "Listado de Requerimientos Internos";
 }
 
-<h1>Listado de Requerimientos Internos</h1>
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Crear Nuevo Requerimiento</a>
-</p>
+    .page-header h1 {
+        margin: 0;
+        font-size: 1.875rem;
+        font-weight: 600;
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHora)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PersonalNombreCompleto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AreaNombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstadoNombre)
-            </th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaHora)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PersonalNombreCompleto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AreaNombre)
-                </td>
-                <td>
-                    <span class="badge bg-secondary">@Html.DisplayFor(modelItem => item.EstadoNombre)</span>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-info">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Detalles</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-            </tr>
+    .btn-create {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-create:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+
+    .card-table {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .table-responsive {
+        border-radius: 12px;
+    }
+
+    .modern-table {
+        margin: 0;
+    }
+
+    .modern-table thead {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .modern-table thead th {
+        font-weight: 600;
+        color: #495057;
+        border: none;
+        padding: 1rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .modern-table tbody tr {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .modern-table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+    }
+
+    .modern-table tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .id-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .status-badge.bg-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+        color: white;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        color: white;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+
+    .empty-state svg {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    @@media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
         }
-    </tbody>
-</table>
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>📋 Listado de Requerimientos Internos</h1>
+</div>
+
+<div class="mb-4">
+    <a asp-action="Create" class="btn btn-create">
+        ➕ Crear Nuevo Requerimiento
+    </a>
+</div>
+
+<div class="card-table">
+    <div class="table-responsive">
+        <table class="table modern-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>
+                        Fecha y hora
+                    </th>
+                    <th>
+                        Personal
+                    </th>
+                    <th>
+                        Área
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="id-badge">#@Html.DisplayFor(modelItem => item.Id)</span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaHora)
+                            </td>
+                            <td>
+                                <strong>@Html.DisplayFor(modelItem => item.PersonalNombreCompleto)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AreaNombre)
+                            </td>
+                            <td>
+                                <span class="status-badge bg-secondary">@Html.DisplayFor(modelItem => item.EstadoNombre)</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-action btn-edit">
+                                        ✏️ Editar
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn-action btn-details">
+                                        👁️ Detalles
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn-action btn-delete">
+                                        🗑️ Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <h5>No hay requerimientos internos</h5>
+                                <p>Comienza creando tu primer requerimiento</p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

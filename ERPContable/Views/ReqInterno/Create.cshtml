@@ -4,84 +4,320 @@
     ViewData["Title"] = "Crear Requerimiento Interno";
 }
 
-<h1>Crear Requerimiento Interno</h1>
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 600;
+        }
+
+    .modern-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: none;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 0.625rem 0.875rem;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+    .modern-table {
+        margin-bottom: 0;
+    }
+
+        .modern-table thead {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+            .modern-table thead th {
+                font-weight: 600;
+                color: #495057;
+                border: none;
+                padding: 1rem;
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        .modern-table tbody tr {
+            border-bottom: 1px solid #f1f3f5;
+            transition: all 0.2s ease;
+        }
+
+            .modern-table tbody tr:hover {
+                background-color: #f8f9fa;
+            }
+
+        .modern-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+    .add-product-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        border: none;
+        color: white;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+
+    .btn-remove {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        .btn-remove:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+            color: white;
+        }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-custom {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .empty-table-message {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .quantity-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-primary-custom,
+        .btn-secondary-custom {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>📝 Crear Requerimiento Interno</h1>
+</div>
 
 <form asp-action="Create" id="reqInternoForm">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="card p-3 mb-3">
-        <h4>Información General</h4>
+    <div class="modern-card">
+        <h4 class="card-title">
+            <span>ℹ️</span> Información General
+        </h4>
         <div class="row">
             <div class="col-md-4">
-                <div class="form-group">
-                    <label asp-for="FechaHora" class="control-label"></label>
+                <div class="form-group mb-3">
+                    <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
                     <input asp-for="FechaHora" type="datetime-local" class="form-control" />
                     <span asp-validation-for="FechaHora" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group">
-                    <label asp-for="PersonalId" class="control-label">Personal Solicitante</label>
-                    <select asp-for="PersonalId" class="form-control" asp-items="ViewBag.PersonalId"></select>
+                <div class="form-group mb-3">
+                    <label asp-for="PersonalId" class="form-label">Personal Solicitante</label>
+                    <select asp-for="PersonalId" class="form-control form-select" asp-items="ViewBag.PersonalId">
+                        <option value="">-- Seleccione Personal --</option>
+                    </select>
                     <span asp-validation-for="PersonalId" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group">
-                    <label asp-for="AreaId" class="control-label">Área</label>
-                    <select asp-for="AreaId" class="form-control" asp-items="ViewBag.AreaId"></select>
+                <div class="form-group mb-3">
+                    <label asp-for="AreaId" class="form-label">Área</label>
+                    <select asp-for="AreaId" class="form-control form-select" asp-items="ViewBag.AreaId">
+                        <option value="">-- Seleccione Área --</option>
+                    </select>
                     <span asp-validation-for="AreaId" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Nota" class="control-label"></label>
-            <textarea asp-for="Nota" class="form-control"></textarea>
+        <div class="form-group mb-0">
+            <label asp-for="Nota" class="form-label">Nota / Observaciones</label>
+            <textarea asp-for="Nota" class="form-control" rows="3" placeholder="Ingrese observaciones adicionales..."></textarea>
             <span asp-validation-for="Nota" class="text-danger"></span>
         </div>
-        @* Campos de Documento y Estado se pueden mantener ocultos o pre-seleccionados *@
         <input type="hidden" asp-for="DocumentoId" value="1" />
         <input type="hidden" asp-for="EstadoId" />
     </div>
 
-    <div class="card p-3">
-        <h4>Detalle de Productos Solicitados</h4>
-        <table class="table" id="detallesTable">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Observación</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @* Las filas se insertarán aquí dinámicamente con JavaScript *@
-            </tbody>
-        </table>
+    <div class="modern-card">
+        <h4 class="card-title">
+            <span>📦</span> Detalle de Productos Solicitados
+        </h4>
 
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <select id="productoSelect" class="form-control" asp-items="ViewBag.ProductoId">
-                    <option value="">-- Seleccione Producto --</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <input type="number" id="cantidadInput" min="0.01" step="0.01" class="form-control" placeholder="Cantidad" />
-            </div>
-            <div class="col-md-4">
-                <input type="text" id="observacionInput" class="form-control" placeholder="Observación" />
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-success w-100" id="agregarDetalleBtn">Agregar</button>
+        <div class="table-responsive">
+            <table class="table modern-table" id="detallesTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width: 120px;">Cantidad</th>
+                        <th>Observación</th>
+                        <th style="width: 120px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="emptyMessage">
+                        <td colspan="4" class="empty-table-message">
+                            No hay productos agregados. Use el formulario a continuación para agregar productos.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="add-product-section">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Producto</label>
+                    <select id="productoSelect" class="form-control form-select" asp-items="ViewBag.ProductoId">
+                        <option value="">-- Seleccione Producto --</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" id="cantidadInput" min="0.01" step="0.01" class="form-control" placeholder="0.00" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Observación</label>
+                    <input type="text" id="observacionInput" class="form-control" placeholder="Opcional..." />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label d-none d-md-block">&nbsp;</label>
+                    <button type="button" class="btn btn-add" id="agregarDetalleBtn">
+                        ➕ Agregar
+                    </button>
+                </div>
             </div>
         </div>
         <span asp-validation-for="Detalles" class="text-danger"></span>
     </div>
 
-    <div class="form-group mt-3">
-        <input type="submit" value="Crear Requerimiento" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <div class="action-buttons">
+        <button type="submit" class="btn btn-primary-custom">
+            💾 Crear Requerimiento
+        </button>
+        <a asp-action="Index" class="btn btn-secondary-custom">
+            ❌ Cancelar
+        </a>
     </div>
 </form>
 
@@ -101,7 +337,7 @@
             var observacion = $('#observacionInput').val();
 
             if (!productoId || cantidad <= 0) {
-                alert('Debe seleccionar un producto y especificar una cantidad mayor a cero.');
+                alert('⚠️ Debe seleccionar un producto y especificar una cantidad mayor a cero.');
                 return;
             }
 
@@ -115,23 +351,31 @@
             });
 
             if(exists) {
-                alert('Este producto ya fue agregado al requerimiento.');
+                alert('⚠️ Este producto ya fue agregado al requerimiento.');
                 return;
             }
+
+            // Ocultar mensaje de tabla vacía
+            $('#emptyMessage').hide();
 
             // Generar la nueva fila y los campos ocultos para el binding de MVC
             var newRow = `
                 <tr>
-                    <td><input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
+                    <td>
+                        <input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${cantidad}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].Observacion" value="${observacion}" />
-                        ${productoNombre}
+                        <strong>${productoNombre}</strong>
                     </td>
-                    <td>${cantidad}</td>
-                    <td>${observacion}</td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-sm removeDetalleBtn">Eliminar</button>
+                        <span class="quantity-badge">${cantidad}</span>
+                    </td>
+                    <td>${observacion || '<em style="color: #999;">Sin observación</em>'}</td>
+                    <td>
+                        <button type="button" class="btn btn-remove removeDetalleBtn">
+                            🗑️ Eliminar
+                        </button>
                     </td>
                 </tr>
             `;
@@ -143,17 +387,41 @@
             $('#productoSelect').val('');
             $('#cantidadInput').val('');
             $('#observacionInput').val('');
+
+            // Focus en el select de productos
+            $('#productoSelect').focus();
         });
 
         // Función para eliminar una fila de detalle
         $(document).on('click', '.removeDetalleBtn', function () {
             $(this).closest('tr').remove();
 
-            // No es necesario reindexar los Hidden Indexers si usas el enfoque de "Hidden Indexers"
-            // donde solo se necesita la clave "Detalles.Index" con un valor único para cada fila.
+            // Mostrar mensaje de tabla vacía si no hay filas
+            if ($('#detallesTable tbody tr').length === 0) {
+                $('#detallesTable tbody').append(`
+                    <tr id="emptyMessage">
+                        <td colspan="4" class="empty-table-message">
+                            No hay productos agregados. Use el formulario a continuación para agregar productos.
+                        </td>
+                    </tr>
+                `);
+            }
         });
 
-        // Si estás editando, debes cargar el 'detalleIndex' con el número de filas existentes + 1
-        // y generar las filas de detalle al cargar la vista.
+        // Permitir agregar con Enter en el campo de cantidad
+        $('#cantidadInput').keypress(function(e) {
+            if(e.which === 13) {
+                e.preventDefault();
+                $('#agregarDetalleBtn').click();
+            }
+        });
+
+        // Permitir agregar con Enter en el campo de observación
+        $('#observacionInput').keypress(function(e) {
+            if(e.which === 13) {
+                e.preventDefault();
+                $('#agregarDetalleBtn').click();
+            }
+        });
     </script>
 }

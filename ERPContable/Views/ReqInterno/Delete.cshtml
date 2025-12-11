@@ -1,24 +1,231 @@
 ﻿@model ERPContable.ViewModels.ReqInterno.ReqInternoViewModel
-
 @{
     ViewData["Title"] = "Eliminar Requerimiento N° " + Model.Id;
 }
 
-<h1>Eliminar</h1>
+<style>
+    .page-header-delete {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
+    }
 
-<h3>¿Estás seguro de que quieres eliminar este requerimiento interno N° @Model.Id?</h3>
-<div class="alert alert-warning">
-    <strong>Advertencia:</strong> Esto eliminará permanentemente el requerimiento y todos sus detalles.
+        .page-header-delete h1 {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+    .delete-icon {
+        font-size: 2.5rem;
+    }
+
+    .confirmation-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        border: none;
+    }
+
+    .confirmation-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .confirmation-text {
+        font-size: 1rem;
+        color: #6c757d;
+        line-height: 1.6;
+    }
+
+    .alert-warning-custom {
+        background: linear-gradient(135deg, #fff3cd 0%, #fff9e6 100%);
+        border: 2px solid #ffc107;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+    .alert-icon {
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+
+    .alert-content {
+        flex: 1;
+    }
+
+        .alert-content strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .alert-content p {
+            color: #856404;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+    .details-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: none;
+    }
+
+    .details-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-delete-confirm {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+        font-size: 1rem;
+    }
+
+        .btn-delete-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+            color: white;
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        }
+
+    .btn-cancel-custom {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .btn-cancel-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    .req-id-badge {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.125rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header-delete h1 {
+            font-size: 1.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-delete-confirm,
+        .btn-cancel-custom {
+            width: 100%;
+        }
+
+        .alert-warning-custom {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="page-header-delete">
+    <h1>
+        <span class="delete-icon">🗑️</span>
+        Eliminar Requerimiento Interno
+    </h1>
 </div>
 
-@* Reutilizamos el detalle del requerimiento para mostrar la información antes de eliminar *@
-<partial name="_ReqInternoDetailsPartial" model="Model" />
+<div class="confirmation-card">
+    <div class="req-id-badge">
+        Requerimiento #@Model.Id
+    </div>
+    <div class="confirmation-title">
+        <span>⚠️</span>
+        Confirmación de Eliminación
+    </div>
+    <p class="confirmation-text">
+        ¿Estás seguro de que deseas eliminar este requerimiento interno?
+        Esta acción no se puede deshacer y se perderán todos los datos asociados.
+    </p>
+</div>
+
+<div class="alert-warning-custom">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-content">
+        <strong>Advertencia Importante</strong>
+        <p>Esta operación eliminará permanentemente el requerimiento y todos sus detalles asociados. Los datos no podrán ser recuperados después de confirmar esta acción.</p>
+    </div>
+</div>
+
+<div class="details-card">
+    <div class="details-title">
+        <span>📋</span>
+        Información del Requerimiento a Eliminar
+    </div>
+    <partial name="_ReqInternoDetailsPartial" model="Model" />
+</div>
 
 <form asp-action="Delete">
     <input type="hidden" asp-for="Id" />
-    <input type="submit" value="Eliminar Requerimiento" class="btn btn-danger" /> |
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <div class="action-buttons">
+        <button type="submit" class="btn btn-delete-confirm">
+            🗑️ Confirmar Eliminación
+        </button>
+        <a asp-action="Index" class="btn btn-cancel-custom">
+            ↩️ Cancelar y Volver
+        </a>
+    </div>
 </form>
-
-@* Nota: Podrías crear una vista parcial llamada "_ReqInternoDetailsPartial.cshtml" que contenga 
-    el código de la vista Details (sin los botones de acción) para evitar duplicar el HTML de visualización. *@

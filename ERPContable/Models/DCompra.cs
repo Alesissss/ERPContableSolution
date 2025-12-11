@@ -11,6 +11,6 @@ namespace ERPContable.Models
         public int ocompraId { get; set; }
         public decimal cantidad { get; set; }
         public decimal precio { get; set; }
-        public string observacion { get; set; }
+        public string? observacion { get; set; }
     }
 }
