@@ -1,8 +1,184 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    // Cambiamos el título para reflejar que es un Dashboard
+    ViewData["Title"] = "Dashboard Principal";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Estilos adicionales para las tarjetas del Dashboard (Infoboxes) */
+    .info-box-custom {
+        border-radius: 0.5rem;
+        display: flex;
+        min-height: 80px;
+        background: white;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
+    }
+
+        .info-box-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+    .info-box-icon {
+        border-radius: 0.5rem 0 0 0.5rem;
+        align-items: center;
+        display: flex;
+        font-size: 2.5rem;
+        justify-content: center;
+        width: 90px;
+        color: white;
+    }
+
+    .info-box-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        flex: 1;
+    }
+
+    .info-box-text {
+        display: block;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #6c757d;
+    }
+
+    .info-box-number {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+
+    /* Colores personalizados para los Infoboxes */
+    .bg-info-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+    }
+
+    .bg-info-success {
+        background: linear-gradient(45deg, #28a745, #1e7e34);
+    }
+
+    .bg-info-warning {
+        background: linear-gradient(45deg, #ffc107, #d39e00);
+    }
+
+    .bg-info-danger {
+        background: linear-gradient(45deg, #dc3545, #a71d2a);
+    }
+
+    .card-dashboard {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+
+<div class="container-fluid">
+
+    <h2 class="mb-4">Resumen General del Sistema</h2>
+
+    <div class="row">
+
+        <div class="col-lg-3 col-6">
+            <a href="/ReqInterno" style="text-decoration: none;">
+                <div class="info-box-custom">
+                    <span class="info-box-icon bg-info-danger"><i class="fas fa-exclamation-triangle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Req. Pendientes de Aprobación</span>
+                        <span class="info-box-number text-danger">12</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <a href="/OCompra" style="text-decoration: none;">
+                <div class="info-box-custom">
+                    <span class="info-box-icon bg-info-primary"><i class="fas fa-shopping-cart"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Órdenes de Compra Activas</span>
+                        <span class="info-box-number text-primary">45</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <a href="/IngresoSalidaAlm" style="text-decoration: none;">
+                <div class="info-box-custom">
+                    <span class="info-box-icon bg-info-success"><i class="fas fa-truck-loading"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Movimientos de Almacén Hoy</span>
+                        <span class="info-box-number text-success">8</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <a href="#" style="text-decoration: none;">
+                <div class="info-box-custom">
+                    <span class="info-box-icon bg-secondary"><i class="fas fa-boxes"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total de Artículos</span>
+                        <span class="info-box-number text-secondary">3,120</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card card-dashboard">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0"><i class="fas fa-bell text-warning me-2"></i> Alertas y Tareas Pendientes</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Requerimiento #122 requiere tu aprobación.
+                            <span class="badge bg-danger rounded-pill">Urgente</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Se acerca la fecha de entrega de OC #889.
+                            <span class="badge bg-warning text-dark rounded-pill">2 días</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Stock bajo para 'Tornillo M8'.
+                            <span class="badge bg-secondary rounded-pill">Almacén</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-dashboard">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0"><i class="fas fa-plug text-info me-2"></i> Accesos Rápidos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="ReqInterno" asp-action="Create" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i> Crear Nuevo Requerimiento
+                        </a>
+                        <a asp-controller="IngresoSalidaAlm" asp-action="Create" class="btn btn-secondary">
+                            <i class="fas fa-dolly-flatbed me-2"></i> Registrar Movimiento de Almacén
+                        </a>
+                        <a asp-controller="OCompra" asp-action="Index" class="btn btn-outline-dark">
+                            <i class="fas fa-search me-2"></i> Buscar Órdenes de Compra
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

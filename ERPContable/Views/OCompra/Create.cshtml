@@ -1,0 +1,478 @@
+﻿@model ERPContable.ViewModels.OCompra.OCompraViewModel
+
+@{
+    ViewData["Title"] = "Crear Orden de Compra";
+}
+
+<style>
+    /* Estilos de cabecera */
+    .page-header {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); /* Nuevo color para OC */
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 600;
+        }
+
+    /* Estilos de Tarjeta (Modern Card) - Mantenidos */
+    .modern-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: none;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Estilos de formulario - Mantenidos */
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 0.625rem 0.875rem;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #17a2b8; /* Nuevo color de focus para OC */
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+        }
+
+    /* Estilos de tabla - Mantenidos */
+    .modern-table {
+        margin-bottom: 0;
+    }
+
+        .modern-table thead {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+            .modern-table thead th {
+                font-weight: 600;
+                color: #495057;
+                border: none;
+                padding: 1rem;
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        .modern-table tbody tr {
+            border-bottom: 1px solid #f1f3f5;
+            transition: all 0.2s ease;
+        }
+
+            .modern-table tbody tr:hover {
+                background-color: #f8f9fa;
+            }
+
+        .modern-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+    /* Sección de Agregar Producto */
+    .add-product-section {
+        background: linear-gradient(135deg, #e6f6f9 0%, #d4ebf2 100%); /* Color de fondo ligero */
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        border: none;
+        color: white;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+
+    .btn-remove {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        .btn-remove:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+            color: white;
+        }
+
+    /* Botones de Acción Principal */
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); /* Nuevo color principal para OC */
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+    }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-custom {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .empty-table-message {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    /* Nuevo Badge para Precio */
+    .price-badge {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .quantity-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-primary-custom,
+        .btn-secondary-custom {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>📝 Crear Orden de Compra</h1>
+</div>
+
+<form asp-action="Create" id="oCompraForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="modern-card">
+        <h4 class="card-title">
+            <span>ℹ️</span> Información General de la Orden
+        </h4>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
+                    <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="FechaHora" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="ProveedorId" class="form-label">Proveedor</label>
+                    <select asp-for="ProveedorId" class="form-control form-select" asp-items="ViewBag.ProveedorId">
+                        <option value="">-- Seleccione Proveedor --</option>
+                    </select>
+                    <span asp-validation-for="ProveedorId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="ReqInternoId" class="form-label">Requerimiento Asociado (Opcional)</label>
+                    <select asp-for="ReqInternoId" class="form-control form-select" asp-items="ViewBag.ReqInternoId">
+                        <option value="">-- Seleccione Requerimiento --</option>
+                    </select>
+                    <span asp-validation-for="ReqInternoId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-0">
+            <label asp-for="Nota" class="form-label">Nota / Condiciones de Compra</label>
+            <textarea asp-for="Nota" class="form-control" rows="3" placeholder="Ingrese condiciones o notas importantes para la compra..."></textarea>
+            <span asp-validation-for="Nota" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="DocumentoId" value="2" /> @* Asumiendo que DocumentoId=2 es para OCompra *@
+        <input type="hidden" asp-for="EstadoId" />
+    </div>
+
+    <div class="modern-card">
+        <h4 class="card-title">
+            <span>📦</span> Detalle de Productos a Comprar
+        </h4>
+
+        <div class="table-responsive">
+            <table class="table modern-table" id="detallesTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width: 120px;">Cantidad</th>
+                        <th style="width: 120px;">Precio Unitario</th>
+                        <th>Observación</th>
+                        <th style="width: 120px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="emptyMessage">
+                        <td colspan="5" class="empty-table-message">
+                            @* Colspan 5 para la nueva columna *@
+                            No hay productos agregados. Use el formulario a continuación para agregar productos.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="add-product-section">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Producto</label>
+                    <select id="productoSelect" class="form-control form-select" asp-items="ViewBag.ProductoId">
+                        <option value="">-- Seleccione Producto --</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" id="cantidadInput" min="0.01" step="0.01" class="form-control" placeholder="0.00" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Precio Unitario</label>
+                    <input type="number" id="precioInput" min="0.01" step="0.01" class="form-control" placeholder="0.00" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Observación</label>
+                    <input type="text" id="observacionInput" class="form-control" placeholder="Opcional..." />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label d-none d-md-block">&nbsp;</label>
+                    <button type="button" class="btn btn-add" id="agregarDetalleBtn">
+                        ➕ Agregar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <span asp-validation-for="Detalles" class="text-danger"></span>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit" class="btn btn-primary-custom">
+            💾 Crear Orden de Compra
+        </button>
+        <a asp-action="Index" class="btn btn-secondary-custom">
+            ❌ Cancelar
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        var detalleIndex = 0;
+
+        // Función para agregar una fila de detalle
+        $('#agregarDetalleBtn').click(function () {
+            var productoId = $('#productoSelect').val();
+            var productoNombre = $('#productoSelect option:selected').text();
+            var cantidad = $('#cantidadInput').val();
+            var precio = $('#precioInput').val(); // Capturar precio
+            var observacion = $('#observacionInput').val();
+
+            if (!productoId || cantidad <= 0 || precio <= 0) {
+                alert('⚠️ Debe seleccionar un producto y especificar una cantidad y precio unitario mayor a cero.');
+                return;
+            }
+
+            // Validar que el precio sea un número
+            if (isNaN(parseFloat(precio))) {
+                 alert('⚠️ El precio unitario debe ser un número válido.');
+                 return;
+            }
+
+            // Si el producto ya existe en la tabla
+            var exists = false;
+            $('#detallesTable tbody tr').each(function() {
+                // Se busca si ya existe un campo oculto con ese ProductoId
+                if ($(this).find('[name$="ProductoId"]').val() === productoId) {
+                    exists = true;
+                    return false; // Salir del each
+                }
+            });
+
+            if(exists) {
+                alert('⚠️ Este producto ya fue agregado a la orden de compra.');
+                return;
+            }
+
+            // Ocultar mensaje de tabla vacía
+            $('#emptyMessage').hide();
+
+            // Formatear el precio y cantidad
+            var formattedPrice = parseFloat(precio).toFixed(2);
+            var formattedCantidad = parseFloat(cantidad).toFixed(2);
+
+            // Generar la nueva fila y los campos ocultos para el binding de MVC
+            var newRow = `
+                <tr data-producto-id="${productoId}">
+                    <td>
+                        <input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${formattedCantidad}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Precio" value="${formattedPrice}" />
+                        <input type="hidden" name="Detalles[${detalleIndex}].Observacion" value="${observacion}" />
+                        <strong>${productoNombre}</strong>
+                    </td>
+                    <td>
+                        <span class="quantity-badge">${formattedCantidad}</span>
+                    </td>
+                    <td>
+                        <span class="price-badge">$${formattedPrice}</span>
+                    </td>
+                    <td>${observacion || '<em style="color: #999;">Sin observación</em>'}</td>
+                    <td>
+                        <button type="button" class="btn btn-remove removeDetalleBtn">
+                            🗑️ Eliminar
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            $('#detallesTable tbody').append(newRow);
+            detalleIndex++;
+
+            // Limpiar campos de entrada
+            $('#productoSelect').val('');
+            $('#cantidadInput').val('');
+            $('#precioInput').val(''); // Limpiar campo de precio
+            $('#observacionInput').val('');
+
+            // Focus en el select de productos
+            $('#productoSelect').focus();
+        });
+
+        // Función para eliminar una fila de detalle
+        $(document).on('click', '.removeDetalleBtn', function () {
+            $(this).closest('tr').remove();
+
+            // Recalcular índices para mantener la lista contigua (necesario para el binding de listas en MVC)
+            $('#detallesTable tbody tr').each(function(i) {
+                // Eliminar el input Index (ya no se usa en ASP.NET Core 3.1+) y actualizar los índices
+                $(this).find('input[name^="Detalles.Index"]').remove();
+
+                $(this).find('input[name^="Detalles["]').each(function() {
+                    var name = $(this).attr('name');
+                    var newName = name.replace(/\[\d+\]/g, '[' + i + ']');
+                    $(this).attr('name', newName);
+                });
+            });
+
+            // Mostrar mensaje de tabla vacía si no hay filas
+            if ($('#detallesTable tbody tr').length === 0) {
+                $('#detallesTable tbody').append(`
+                    <tr id="emptyMessage">
+                        <td colspan="5" class="empty-table-message">
+                            No hay productos agregados. Use el formulario a continuación para agregar productos.
+                        </td>
+                    </tr>
+                `);
+            }
+        });
+
+        // Permitir agregar con Enter en el campo de observación/precio
+        $('#precioInput').keypress(function(e) {
+            if(e.which === 13) {
+                e.preventDefault();
+                $('#agregarDetalleBtn').click();
+            }
+        });
+
+        $('#observacionInput').keypress(function(e) {
+            if(e.which === 13) {
+                e.preventDefault();
+                $('#agregarDetalleBtn').click();
+            }
+        });
+    </script>
+}

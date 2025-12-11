@@ -1,0 +1,113 @@
+﻿@model ERPContable.ViewModels.OCompra.OCompraViewModel
+@using System.Globalization
+
+@{
+    // Usar la cultura local para formatear números como moneda
+    var culture = new CultureInfo("es-PE"); // O la cultura que corresponda para la moneda
+}
+
+<style>
+    /* Estilos básicos para la presentación de detalles */
+    .card-header h4 {
+        color: #17a2b8; /* Color de cabecera de la OC */
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+
+    .badge-oc {
+        background-color: #17a2b8;
+        color: white;
+        padding: 0.5em 0.75em;
+        border-radius: 0.35rem;
+        font-weight: 500;
+    }
+
+    .total-footer {
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-align: right;
+        padding-top: 1rem;
+        border-top: 1px dashed #dee2e6;
+        color: #28a745; /* Énfasis en el total */
+    }
+</style>
+
+<h1>Detalles de Orden de Compra N° @Model.Id</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Encabezado de la Orden de Compra</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Fecha y Hora</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaHora)</dd>
+
+            <dt class="col-sm-3">Proveedor</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.ProveedorNombre)</dd>
+
+            <dt class="col-sm-3">Requerimiento Asociado</dt>
+            <dd class="col-sm-9">
+                @(Model.ReqInternoId.HasValue ? $"Req. N° {Model.ReqInternoId}" : "N/A")
+            </dd>
+
+            <dt class="col-sm-3">Documento</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.DocumentoCodigo)</dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                <span class="badge badge-oc">@Html.DisplayFor(model => model.EstadoNombre)</span>
+            </dd>
+
+            <dt class="col-sm-3">Nota / Condiciones</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Nota)</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Productos a Comprar</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-end" style="width: 15%;">Cantidad</th>
+                        <th class="text-end" style="width: 15%;">Precio Unitario</th>
+                        <th class="text-end" style="width: 15%;">Total Línea</th>
+                        <th>Observación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal totalGeneral = 0;
+                    }
+
+                    @foreach (var detalle in Model.Detalles)
+                    {
+                        decimal totalLinea = detalle.Cantidad * detalle.Precio;
+                        totalGeneral += totalLinea;
+
+                        <tr>
+                            <td>@detalle.ProductoNombre</td>
+                            <td class="text-end">@detalle.Cantidad.ToString("N2", culture)</td>
+                            <td class="text-end">@detalle.Precio.ToString("C2", culture)</td>
+                            <td class="text-end"><strong>@totalLinea.ToString("C2", culture)</strong></td>
+                            <td>@detalle.Observacion</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="total-footer">TOTAL DE LA ORDEN:</td>
+                        <td class="total-footer">@totalGeneral.ToString("C2", culture)</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

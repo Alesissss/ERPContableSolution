@@ -1,0 +1,434 @@
+﻿@model ERPContable.ViewModels.OCompra.OCompraViewModel
+@{
+    ViewData["Title"] = "Detalles de Orden de Compra N° " + Model.Id;
+}
+
+<style>
+    /* ---------------------------------------------------------------------- */
+    /* --- COPIA EXACTA DE LOS ESTILOS CSS PROPORCIONADOS (ReqInterno) --- */
+    /* ---------------------------------------------------------------------- */
+    .page-header-details {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .page-header-details h1 {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+    .req-id-badge-details {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.125rem;
+        display: inline-block;
+        backdrop-filter: blur(10px);
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.25rem 1.5rem;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+        .card-header-custom h4 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+    .card-body-custom {
+        padding: 1.5rem;
+    }
+
+    .info-row {
+        display: flex;
+        padding: 0.875rem 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        flex: 0 0 200px;
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+        .info-value strong {
+            color: #495057;
+        }
+
+    .status-badge-details {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .status-badge-oc { /* Nuevo estilo para Estado de OC */
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+        color: #343a40;
+    }
+
+    .req-badge-oc { /* Nuevo estilo para el ID de Requerimiento asociado */
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .modern-table-details {
+        margin: 0;
+    }
+
+        .modern-table-details thead {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+            .modern-table-details thead th {
+                font-weight: 600;
+                color: #495057;
+                border: none;
+                padding: 1rem;
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        .modern-table-details tbody tr {
+            border-bottom: 1px solid #f1f3f5;
+            transition: all 0.2s ease;
+        }
+
+            .modern-table-details tbody tr:hover {
+                background-color: #f8f9fa;
+            }
+
+        .modern-table-details tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border: none;
+            font-size: 0.875rem;
+        }
+
+    .quantity-badge-details {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .price-badge-details { /* Nuevo estilo para el precio en la tabla de detalles */
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-block;
+    }
+
+    .product-name {
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .observation-text {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .empty-observation {
+        color: #adb5bd;
+        font-style: italic;
+    }
+
+    .action-buttons-details {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-edit-custom {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-edit-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-back-custom {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-back-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    .empty-state-products {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header-details h1 {
+            font-size: 1.5rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .info-row {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-label {
+            flex: none;
+        }
+
+        .action-buttons-details {
+            flex-direction: column;
+        }
+
+        .btn-edit-custom,
+        .btn-back-custom {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="page-header-details">
+    <h1>
+        <span>🧾</span>
+        Detalles de la Orden de Compra
+        <span class="req-id-badge-details">#@Model.Id</span>
+    </h1>
+</div>
+
+<div class="info-card">
+    <div class="card-header-custom">
+        <h4>
+            <span>ℹ️</span>
+            Información General
+        </h4>
+    </div>
+    <div class="card-body-custom">
+        <div class="info-row">
+            <div class="info-label">
+                <span>📅</span>
+                Fecha y Hora
+            </div>
+            <div class="info-value">
+                <strong>@Html.DisplayFor(model => model.FechaHora)</strong>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">
+                <span>🚚</span>
+                Proveedor
+            </div>
+            <div class="info-value">
+                <strong>@Html.DisplayFor(model => model.ProveedorNombre)</strong>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">
+                <span>🔗</span>
+                Requerimiento Asociado
+            </div>
+            <div class="info-value">
+                @if (Model.ReqInternoId.HasValue)
+                {
+                    <span class="req-badge-oc">#@Model.ReqInternoId</span>
+                }
+                else
+                {
+                    <span class="empty-observation">No aplica</span>
+                }
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">
+                <span>📋</span>
+                Documento
+            </div>
+            <div class="info-value">
+                @Html.DisplayFor(model => model.DocumentoCodigo)
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">
+                <span>🔄</span>
+                Estado
+            </div>
+            <div class="info-value">
+                <span class="status-badge-details status-badge-oc">@Html.DisplayFor(model => model.EstadoNombre)</span>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">
+                <span>📝</span>
+                Nota
+            </div>
+            <div class="info-value">
+                @if (!string.IsNullOrWhiteSpace(Model.Nota))
+                {
+                    @Html.DisplayFor(model => model.Nota)
+                }
+                else
+                {
+                    <span class="empty-observation">Sin comentarios</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="info-card">
+    <div class="card-header-custom">
+        <h4>
+            <span>📦</span>
+            Productos de la Orden
+        </h4>
+    </div>
+    <div class="card-body-custom" style="padding: 0;">
+        @if (Model.Detalles != null && Model.Detalles.Any())
+        {
+            <div class="table-responsive">
+                <table class="table modern-table-details">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th style="width: 150px;">Cantidad</th>
+                            <th style="width: 150px;">Precio Unitario</th>
+                            <th>Observación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detalle in Model.Detalles)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="product-name">@detalle.ProductoNombre</span>
+                                </td>
+                                <td>
+                                    <span class="quantity-badge-details">@detalle.Cantidad.ToString("N2")</span>
+                                </td>
+                                <td>
+                                    <span class="price-badge-details">$@detalle.Precio.ToString("N2")</span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(detalle.Observacion))
+                                    {
+                                        <span class="observation-text">@detalle.Observacion</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="empty-observation">Sin observación</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state-products">
+                <p>📦 No hay productos asociados a esta Orden de Compra.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="action-buttons-details">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-edit-custom">
+        <span>✏️</span>
+        Editar Orden de Compra
+    </a>
+    <a asp-action="Index" class="btn-back-custom">
+        <span>↩️</span>
+        Volver a la Lista
+    </a>
+</div>

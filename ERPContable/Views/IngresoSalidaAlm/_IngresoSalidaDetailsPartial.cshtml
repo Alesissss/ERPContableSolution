@@ -1,0 +1,29 @@
+﻿@model ERPContable.ViewModels.IngresoSalidaAlm.DIngresoSalidaAlmViewModel
+
+@{
+    var index = ViewData["index"] as int? ?? 0;
+}
+
+<tr>
+    <td>
+        {{! Campos ocultos para el Binding del modelo (Detalles[i].Propiedad) }}
+        <input type="hidden" name="Detalles.Index" value="@index" />
+        <input type="hidden" name="Detalles[@index].ProductoId" value="@Model.ProductoId" />
+        <input type="hidden" name="Detalles[@index].Cantidad" value="@Model.Cantidad" />
+        <input type="hidden" name="Detalles[@index].Observacion" value="@Model.Observacion" />
+
+        @* Muestra el nombre del producto, que fue cargado en el ViewModel *@@* Este campo se usa si la validación falla o en Edit *@
+        <strong>@Html.DisplayFor(model => model.ProductoNombre)</strong>
+    </td>
+    <td>
+        <span class="quantity-badge">@Model.Cantidad.ToString("N2")</span>
+    </td>
+    <td>
+        @(string.IsNullOrEmpty(Model.Observacion) ? Html.Raw("<em style=\"color: #999;\">Sin observación</em>") : Html.DisplayFor(model => model.Observacion))
+    </td>
+    <td>
+        <button type="button" class="btn btn-remove removeDetalleBtn">
+            🗑️ Eliminar
+        </button>
+    </td>
+</tr>

@@ -1,11 +1,13 @@
-﻿@model ERPContable.ViewModels.ReqInterno.ReqInternoViewModel
+﻿@model ERPContable.ViewModels.IngresoSalidaAlm.IngresoSalidaAlmViewModel
 
 @{
-    ViewData["Title"] = "Editar Requerimiento Interno N° " + Model.Id;
-    int index = 0;
+    ViewData["Title"] = "Editar Movimiento de Almacén N° " + Model.Id;
+    // Inicializar el índice con el conteo actual de detalles para el JavaScript
+    int index = Model.Detalles?.Count ?? 0;
 }
 
 <style>
+    /* Estilos CSS se mantienen idénticos al original */
     .page-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -236,58 +238,67 @@
 <div class="page-header">
     <h1>
         <span>✏️</span>
-        Editar Requerimiento Interno
+        Editar Movimiento de Almacén
         <span class="req-id-badge">#@Model.Id</span>
     </h1>
 </div>
 
-<form asp-action="Edit" id="reqInternoFormWrapper">
+<form asp-action="Edit" id="ingresoSalidaAlmFormWrapper">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
 
     <div class="modern-card">
         <h4 class="card-title">
-            <span>ℹ️</span> Información General
+            <span>ℹ️</span> Información del Movimiento
         </h4>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
+                    @* Se asegura que el formato sea compatible con input type="datetime-local" *@
                     <input asp-for="FechaHora" type="datetime-local" class="form-control" value="@(Model.FechaHora.ToString("yyyy-MM-ddTHH:mm"))" />
                     <span asp-validation-for="FechaHora" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group mb-3">
-                    <label asp-for="PersonalId" class="form-label">Personal Solicitante</label>
-                    <select asp-for="PersonalId" class="form-control form-select" asp-items="ViewBag.PersonalId">
-                        <option value="">-- Seleccione Personal --</option>
+                    <label asp-for="DocumentoId" class="form-label">Tipo de Documento</label>
+                    <select asp-for="DocumentoId" class="form-control form-select" asp-items="ViewBag.DocumentoId">
+                        <option value="">-- Seleccione Documento --</option>
                     </select>
-                    <span asp-validation-for="PersonalId" class="text-danger"></span>
+                    <span asp-validation-for="DocumentoId" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group mb-3">
-                    <label asp-for="AreaId" class="form-label">Área</label>
-                    <select asp-for="AreaId" class="form-control form-select" asp-items="ViewBag.AreaId">
-                        <option value="">-- Seleccione Área --</option>
+                    <label asp-for="ReqInternoId" class="form-label">Requerimiento Interno (Origen)</label>
+                    <select asp-for="ReqInternoId" class="form-control form-select" asp-items="ViewBag.ReqInternoId">
+                        <option value="">-- Seleccione Requerimiento --</option>
                     </select>
-                    <span asp-validation-for="AreaId" class="text-danger"></span>
+                    <span asp-validation-for="ReqInternoId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label asp-for="OCompraId" class="form-label">Orden de Compra (Recepción)</label>
+                    <select asp-for="OCompraId" class="form-control form-select" asp-items="ViewBag.OCompraId">
+                        <option value="">-- Opcional (Recepción OC) --</option>
+                    </select>
+                    <span asp-validation-for="OCompraId" class="text-danger"></span>
                 </div>
             </div>
         </div>
         <div class="form-group mb-0">
-            <label asp-for="Nota" class="form-label">Nota / Observaciones</label>
-            <textarea asp-for="Nota" class="form-control" rows="3" placeholder="Ingrese observaciones adicionales..."></textarea>
+            <label asp-for="Nota" class="form-label">Nota / Observaciones del Movimiento</label>
+            <textarea asp-for="Nota" class="form-control" rows="3" placeholder="Ingrese observaciones adicionales sobre el ingreso o salida..."></textarea>
             <span asp-validation-for="Nota" class="text-danger"></span>
         </div>
-        <input type="hidden" asp-for="DocumentoId" />
         <input type="hidden" asp-for="EstadoId" />
     </div>
 
     <div class="modern-card">
         <h4 class="card-title">
-            <span>📦</span> Detalle de Productos Solicitados
+            <span>📦</span> Productos del Movimiento
         </h4>
 
         <div class="table-responsive">
@@ -296,13 +307,14 @@
                     <tr>
                         <th>Producto</th>
                         <th style="width: 120px;">Cantidad</th>
-                        <th>Observación</th>
+                        <th>Observación del Item</th>
                         <th style="width: 120px;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @{
-                        index = 0;
+                        // Resetear el índice para el bucle de renderizado de los detalles existentes
+                        int currentIndex = 0;
                     }
                     @if (Model.Detalles != null && Model.Detalles.Any())
                     {
@@ -310,14 +322,15 @@
                         {
                             <tr>
                                 <td>
-                                    <input type="hidden" name="Detalles.Index" value="@index" />
-                                    <input type="hidden" name="Detalles[@index].ProductoId" value="@detalle.ProductoId" />
-                                    <input type="hidden" name="Detalles[@index].Cantidad" value="@detalle.Cantidad" />
-                                    <input type="hidden" name="Detalles[@index].Observacion" value="@detalle.Observacion" />
+                                    @* Se utiliza currentIndex para el binding de MVC, el cual se auto incrementa *@
+                                    <input type="hidden" name="Detalles.Index" value="@currentIndex" />
+                                    <input type="hidden" name="Detalles[@currentIndex].ProductoId" value="@detalle.ProductoId" />
+                                    <input type="hidden" name="Detalles[@currentIndex].Cantidad" value="@detalle.Cantidad" />
+                                    <input type="hidden" name="Detalles[@currentIndex].Observacion" value="@detalle.Observacion" />
                                     <span class="product-name">@detalle.ProductoNombre</span>
                                 </td>
                                 <td>
-                                    <span class="quantity-badge">@detalle.Cantidad</span>
+                                    <span class="quantity-badge">@detalle.Cantidad.ToString("N2")</span>
                                 </td>
                                 <td>
                                     @if (!string.IsNullOrWhiteSpace(detalle.Observacion))
@@ -335,8 +348,10 @@
                                     </button>
                                 </td>
                             </tr>
-                            index++;
+                            currentIndex++;
                         }
+                        // Actualizar el índice principal para el JS
+                        index = currentIndex;
                     }
                     else
                     {
@@ -350,6 +365,7 @@
             </table>
         </div>
 
+        @* Formulario para añadir un nuevo detalle *@
         <div class="add-product-section">
             <div class="row g-3">
                 <div class="col-md-4">
@@ -386,6 +402,7 @@
         </a>
     </div>
 </form>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -397,17 +414,21 @@
 
         // --- FUNCIONES DE DETALLES ---
 
+        // Obtiene el nombre del producto del SelectList (debe coincidir con la implementación del controlador)
+        function getProductoNombre(id) {
+            return $('#productoSelect option[value="' + id + '"]').text().trim();
+        }
+
         // Función para agregar una fila de detalle
         $('#agregarDetalleBtn').click(function () {
             var productoSelect = $('#productoSelect');
             var productoId = productoSelect.val();
-            // Esto captura el texto del producto seleccionado en el dropdown
-            var productoNombre = productoSelect.find('option:selected').text();
+            var productoNombre = getProductoNombre(productoId);
             var cantidad = $('#cantidadInput').val();
             var observacion = $('#observacionInput').val();
 
-            if (!productoId || cantidad <= 0) {
-                alert('⚠️ Debe seleccionar un producto y especificar una cantidad mayor a cero.');
+            if (!productoId || cantidad <= 0 || isNaN(parseFloat(cantidad))) {
+                alert('⚠️ Debe seleccionar un producto y especificar una cantidad válida mayor a cero.');
                 return;
             }
 
@@ -422,7 +443,7 @@
             });
 
             if(exists) {
-                alert('⚠️ Este producto ya fue agregado al requerimiento.');
+                alert('⚠️ Este producto ya fue agregado al movimiento de almacén.');
                 return;
             }
 
@@ -433,6 +454,7 @@
             var newRow = `
                 <tr>
                     <td>
+                        {{! Campos ocultos para el Binding del modelo (Detalles[i].Propiedad) }}
                         <input type="hidden" name="Detalles.Index" value="${detalleIndex}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].ProductoId" value="${productoId}" />
                         <input type="hidden" name="Detalles[${detalleIndex}].Cantidad" value="${cantidad}" />
@@ -440,7 +462,7 @@
                         <span class="product-name">${productoNombre}</span>
                     </td>
                     <td>
-                        <span class="quantity-badge">${cantidad}</span>
+                        <span class="quantity-badge">${parseFloat(cantidad).toFixed(2)}</span>
                     </td>
                     <td>${observacion || '<em style="color: #999;">Sin observación</em>'}</td>
                     <td>
@@ -479,6 +501,7 @@
                         </td>
                     </tr>
                 `);
+                detalleIndex = 0; // Si queda vacía, resetear el índice
             }
         });
 
@@ -486,14 +509,18 @@
         function reindexDetalles() {
             var newIndex = 0;
             $('#detallesTable tbody tr').not('#emptyMessage').each(function() {
+                var row = $(this);
+
                 // Actualizar el input Detalles.Index
-                $(this).find('input[name="Detalles.Index"]').val(newIndex);
+                row.find('input[name="Detalles.Index"]').val(newIndex);
 
                 // Actualizar los inputs indexados
-                $(this).find('input[name^="Detalles["]').each(function() {
-                    var oldName = $(this).attr('name');
+                row.find('input[name^="Detalles["]').each(function() {
+                    var input = $(this);
+                    var oldName = input.attr('name');
+                    // Reemplaza Detalles[cualquierNumero] con Detalles[newIndex]
                     var newName = oldName.replace(/Detalles\[\d+\]/g, `Detalles[${newIndex}]`);
-                    $(this).attr('name', newName);
+                    input.attr('name', newName);
                 });
 
                 newIndex++;
@@ -531,14 +558,15 @@
             // Reindexar justo antes de serializar (para asegurar que los índices son correctos 0, 1, 2...)
             reindexDetalles();
 
-            var form = $('#reqInternoFormWrapper');
+            var form = $('#ingresoSalidaAlmFormWrapper');
             // Serializa todos los inputs dentro del div del formulario (excluyendo el botón)
             var formData = form.find(':input').not('button').serializeArray();
 
             var button = $(this);
 
             $.ajax({
-                url: '@Url.Action("Edit", "ReqInterno", new { id = Model.Id })',
+                // NOTA: Se actualiza la URL para apuntar al controlador IngresoSalidaAlm
+                url: '@Url.Action("Edit", "IngresoSalidaAlm", new { id = Model.Id })',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -547,7 +575,7 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        alert('✅ Requerimiento interno actualizado con éxito.');
+                        alert('✅ Movimiento de almacén actualizado con éxito.');
                         // Redirige a Index
                         window.location.href = response.redirectUrl;
                     } else {
@@ -591,7 +619,7 @@
                             if (modelOnlyErrors.length > 0) {
                                 var summary = $('[asp-validation-summary="ModelOnly"]');
                                 summary.empty().show();
-                                summary.append('<ul>' + modelOnlyErrors.map(e => `<li>${e}</li>`).join('') + '</ul>');
+                                summary.append('<div class="alert alert-danger"><ul>' + modelOnlyErrors.map(e => `<li>${e}</li>`).join('') + '</ul></div>');
                             }
 
                             alert('⚠️ Por favor, revise los campos con errores. Hay fallos de validación.');

@@ -4,47 +4,241 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ERPContable</title>
-    <script type="importmap"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ERPContable.styles.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --sidebar-color: #343a40; /* Color oscuro similar a AdminLTE */
+            --primary-color: #007bff;
+        }
+
+        /* 1. Estructura principal: todo el contenido visible */
+        .wrapper {
+            display: flex;
+            min-height: 100vh; /* Ocupar toda la altura de la ventana */
+        }
+
+        /* 2. Estilos de la Barra Lateral */
+        .main-sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0; /* No permitir que se encoja */
+            background-color: var(--sidebar-color);
+            color: white;
+            padding: 0;
+            position: fixed; /* Fija la barra lateral */
+            height: 100%;
+            overflow-y: auto; /* Permite desplazamiento si el menú es muy largo */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .user-panel {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-panel-info {
+            padding-left: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #adb5bd;
+        }
+
+        /* 3. Estilos del Menú de Navegación */
+        .nav-sidebar {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-header {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #adb5bd;
+            font-weight: 600;
+        }
+
+        .nav-item-custom .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #c2c7d0; /* Color del texto del menú */
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+            .nav-item-custom .nav-link-custom:hover,
+            .nav-item-custom.active > .nav-link-custom {
+                background-color: #495057;
+                color: white;
+            }
+
+        .nav-link-custom i {
+            width: 1.5rem; /* Espacio fijo para el icono */
+            text-align: center;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        /* 4. Contenido Principal */
+        .content-wrapper {
+            flex-grow: 1; /* Ocupar el espacio restante */
+            margin-left: var(--sidebar-width); /* Desplazar el contenido por el ancho de la barra */
+            background-color: #f4f6f9; /* Fondo ligero para el contenido */
+            padding: 0; /* Quitamos el padding del container */
+        }
+
+        .main-content-header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+
+        .main-content-body {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+
+        /* 5. Footer (Ajuste para el layout) */
+        .main-footer {
+            background: white;
+            border-top: 1px solid #dee2e6;
+            padding: 0.5rem 1.5rem;
+            color: #6c757d;
+            margin-left: var(--sidebar-width); /* Mismo desplazamiento que el contenido */
+        }
+
+        /* 6. Responsividad para dispositivos móviles */
+        @@media (max-width: 992px) {
+            .main-sidebar {
+                margin-left: calc(var(--sidebar-width) * -1); /* Ocultar fuera de pantalla */
+                z-index: 1050;
+            }
+
+            .content-wrapper {
+                margin-left: 0;
+            }
+
+            .main-footer {
+                margin-left: 0;
+            }
+            /* Puedes añadir un botón para mostrar/ocultar la barra lateral si lo necesitas */
+            /* Por ahora, se mantendrá oculta en móvil para simplificar */
+        }
+
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ERPContable</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <div class="wrapper">
+        <aside class="main-sidebar">
+            <div class="p-3 text-center" style="background-color: #212529; color: white; font-weight: bold;">
+                <a asp-controller="Home" asp-action="Index" style="text-decoration: none; color: white;">
+                    <i class="fas fa-cubes"></i> ERP Contable
+                </a>
+            </div>
+
+            <div class="user-panel d-flex align-items-center">
+                <div class="image">
+                    <i class="far fa-user-circle fa-2x text-light"></i>
+                </div>
+                <div class="user-panel-info">
+                    <a href="#" class="user-name" style="text-decoration: none;">
+                        Juan Pérez (Simulado)
+                    </a>
+                    <span class="user-role">Administrador</span>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <nav class="mt-2">
+                <ul class="nav-sidebar">
+                    <li class="nav-header">MÓDULOS PRINCIPALES</li>
+
+                    <li class="nav-item-custom @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link-custom">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <p>Inicio / Dashboard</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">GESTIÓN DE PROVISIONES Y ALMACÉN</li>
+
+                    <li class="nav-item-custom @(ViewContext.RouteData.Values["Controller"].ToString() == "ReqInterno" ? "active" : "")">
+                        <a asp-area="" asp-controller="ReqInterno" asp-action="Index" class="nav-link-custom">
+                            <i class="fas fa-file-invoice"></i>
+                            <p>Requerimientos Internos</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item-custom @(ViewContext.RouteData.Values["Controller"].ToString() == "OCompra" ? "active" : "")">
+                        <a asp-area="" asp-controller="OCompra" asp-action="Index" class="nav-link-custom">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Órdenes de Compra</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item-custom @(ViewContext.RouteData.Values["Controller"].ToString() == "IngresoSalidaAlm" ? "active" : "")">
+                        <a asp-area="" asp-controller="IngresoSalidaAlm" asp-action="Index" class="nav-link-custom">
+                            <i class="fas fa-truck-loading"></i>
+                            <p>Movimientos de Almacén</p>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </aside>
+        <div class="content-wrapper">
+            <div class="main-content-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 text-primary">@ViewData["Title"]</h4>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cog"></i> Config
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <main role="main" class="main-content-body">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ERPContable - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="main-footer">
+        <div class="float-end d-none d-sm-inline">
+            Versión 1.0
         </div>
+        <strong>&copy; 2025 - ERPContable</strong>
+        <a asp-area="" asp-controller="Home" asp-action="Privacy">Política de Privacidad</a>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
